@@ -1,0 +1,7 @@
+{
+  "name": "螺旋合并用final v7",
+  "description": "An interactive 3D visualization tool for relationship dynamics, representing duration, frequency, and emotional state as a translucent spiral within a futuristic glass interface.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
