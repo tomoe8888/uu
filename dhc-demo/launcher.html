@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DHC App — Demo</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  overflow: hidden; /* no page scroll — everything fits the viewport */
+}
+
+body {
+  background: linear-gradient(135deg, #dcd6ff 0%, #c4d9ff 50%, #d8eaff 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 24px;
+  font-family: 'Noto Sans JP', sans-serif;
+}
+
+/* depth blobs */
+body::before, body::after {
+  content: '';
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+body::before {
+  width: 500px; height: 500px;
+  background: rgba(121, 101, 240, 0.18);
+  top: -100px; left: -100px;
+}
+body::after {
+  width: 400px; height: 400px;
+  background: rgba(100, 170, 255, 0.18);
+  bottom: -80px; right: -80px;
+}
+
+.demo-label {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  flex-shrink: 0;
+}
+.demo-label h1 {
+  font-family: 'Manrope', sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: #2a2060;
+  margin-bottom: 4px;
+  letter-spacing: -0.5px;
+}
+.demo-label p {
+  font-size: 13px;
+  color: #6060a0;
+}
+
+/* The scaling wrapper — JS sets its height to match scaled bezel */
+.phone-wrap {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+/* Actual bezel — JS applies transform: scale() here */
+.phone-bezel {
+  position: relative;
+  background: #1c1c1e;
+  border-radius: 52px;
+  padding: 14px;
+  transform-origin: top center;
+  box-shadow:
+    0 0 0 1px #3c3c3e,
+    0 20px 50px rgba(0, 0, 0, 0.2),
+    inset 0 0 0 1px #5a5a5e;
+}
+
+/* Side buttons */
+.btn-power {
+  position: absolute; right: -4px; top: 150px;
+  width: 4px; height: 72px; background: #3a3a3c;
+  border-radius: 0 3px 3px 0;
+}
+.btn-vol-up {
+  position: absolute; left: -4px; top: 110px;
+  width: 4px; height: 44px; background: #3a3a3c;
+  border-radius: 3px 0 0 3px;
+}
+.btn-vol-down {
+  position: absolute; left: -4px; top: 164px;
+  width: 4px; height: 44px; background: #3a3a3c;
+  border-radius: 3px 0 0 3px;
+}
+.btn-mute {
+  position: absolute; left: -4px; top: 80px;
+  width: 4px; height: 24px; background: #3a3a3c;
+  border-radius: 3px 0 0 3px;
+}
+
+/* Dynamic island overlaid on top of the screen */
+.dynamic-island {
+  position: absolute;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 122px;
+  height: 34px;
+  background: #1c1c1e;
+  border-radius: 20px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* Home indicator overlaid on the bottom of the screen */
+.home-indicator {
+  position: absolute;
+  bottom: 22px;        /* sits just above the bezel edge */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 130px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.38);
+  border-radius: 100px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.phone-screen {
+  display: block;
+  width: 375px;
+  height: 812px;
+  border-radius: 38px;
+  border: none;
+  overflow: hidden;
+  /* ensure iframe corners are clipped properly */
+  -webkit-mask-image: radial-gradient(white, black);
+  mask-image: radial-gradient(white, black);
+}
+
+/* Quick-nav */
+.quick-nav {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 440px;
+  flex-shrink: 0;
+}
+.nav-btn {
+  background: rgba(255,255,255,0.62);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.85);
+  border-radius: 999px;
+  padding: 7px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #3a2f9a;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.nav-btn:hover {
+  background: rgba(255,255,255,0.9);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(89,81,180,0.2);
+}
+</style>
+</head>
+<body>
+  <div class="demo-label">
+    <h1>DHC Life</h1>
+    <p>Interactive Prototype · 2026</p>
+  </div>
+
+  <div class="phone-wrap" id="phone-wrap">
+    <div class="phone-bezel" id="phone-bezel">
+      <div class="btn-mute"></div>
+      <div class="btn-vol-up"></div>
+      <div class="btn-vol-down"></div>
+      <div class="btn-power"></div>
+      <div class="dynamic-island"></div>
+      <iframe class="phone-screen" src="index.html" id="phone-frame"></iframe>
+      <div class="home-indicator"></div>
+    </div>
+  </div>
+
+  <div class="quick-nav" id="quick-nav">
+    <a class="nav-btn" onclick="document.getElementById('phone-frame').src='index.html'">🏠 ホーム</a>
+    <a class="nav-btn" onclick="document.getElementById('phone-frame').src='shop.html'">🛍 ショップ</a>
+    <a class="nav-btn" onclick="document.getElementById('phone-frame').src='community.html'">💬 コミュニティ</a>
+    <a class="nav-btn" onclick="document.getElementById('phone-frame').src='plan.html'">📋 プラン管理</a>
+    <a class="nav-btn" onclick="document.getElementById('phone-frame').src='recommend.html'">✨ おすすめ</a>
+  </div>
+
+<script>
+  // Natural bezel dimensions (unscaled)
+  const BEZEL_W = 375 + 14 * 2; // 403px
+  const BEZEL_H = 812 + 14 * 2; // 840px
+
+  function scalePhone() {
+    const label   = document.getElementById('phone-wrap').previousElementSibling;
+    const nav     = document.getElementById('quick-nav');
+    const bezel   = document.getElementById('phone-bezel');
+    const wrap    = document.getElementById('phone-wrap');
+
+    const labelH  = label.offsetHeight;
+    const navH    = nav.offsetHeight;
+    const gaps    = 20 * 2;   // body gap × 2
+    const padding = 24 * 2;   // body padding top+bottom
+
+    const available = window.innerHeight - labelH - navH - gaps - padding - 8;
+    const scale = Math.min(1, available / BEZEL_H);
+
+    // Scale the bezel from its top-center so it stays horizontally centered.
+    // Do NOT change wrap width — let it stay at the natural bezel DOM width (403px).
+    // transform-origin: top center keeps the visual phone perfectly centered within
+    // that 403px space, matching how the body centres the wrap.
+    bezel.style.transform = `scale(${scale})`;
+    bezel.style.transformOrigin = 'top center';
+
+    // Only correct the height so the body's flex layout doesn't leave a gap
+    wrap.style.height = (BEZEL_H * scale) + 'px';
+  }
+
+  scalePhone();
+  window.addEventListener('resize', scalePhone);
+</script>
+</body>
+</html>

@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=375, initial-scale=1.0">
+<title>DHC App - ホーム</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #f0f0f0; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; font-family: 'Noto Sans JP', sans-serif; }
+.phone { width: 375px; min-height: 100vh; background: linear-gradient(180deg, rgba(217,179,233,0.2) 0%, rgba(229,229,229,0.2) 24%), #f6f6f6; position: relative; overflow-x: hidden; padding-top: 46px; padding-bottom: 100px; }
+.status-bar { position: fixed; top: 0; left: 0; right: 0; width: 375px; z-index: 100; background: transparent; height: 46px; display: flex; align-items: center; justify-content: space-between; padding: 0 22px; }
+.status-time { font-size: 15px; font-weight: 600; color: #000; }
+.status-icons { display: flex; gap: 6px; align-items: center; }
+.status-icon { font-size: 12px; }
+.section { padding: 0 16px; margin-bottom: 24px; }
+.greeting { display: flex; align-items: center; gap: 16px; padding: 8px 16px 0; }
+.avatar { width: 40px; height: 40px; border-radius: 50%; background: #e8e0f0; border: 1px solid #c5c5c5; overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+.greeting-text { font-size: 18px; font-weight: 500; color: #1c1917; }
+.tabs { display: flex; padding: 16px 16px 0; gap: 0; }
+.tab { width: 50px; text-align: center; font-size: 14px; color: #666; padding-bottom: 8px; cursor: pointer; }
+.tab.active { font-weight: 700; color: #000; border-bottom: 2px solid #5951b4; }
+.score-card { margin: 16px 16px 0; background: white; border-radius: 12px; padding: 16px 26px; display: flex; align-items: center; justify-content: space-between; }
+.score-left h3 { font-size: 14px; font-weight: 500; color: #5951b4; letter-spacing: 0.35px; margin-bottom: 4px; }
+.score-number { font-family: 'Manrope', sans-serif; font-size: 42px; font-weight: 800; color: #5951b4; display: inline; line-height: 1; }
+.score-max { font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 700; color: rgba(89,81,180,0.6); }
+.score-bars { display: flex; gap: 16px; align-items: flex-end; height: 90px; }
+.bar-item { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.bar-track { width: 12px; height: 55px; background: white; border: 1px solid #e8e8e8; border-radius: 999px; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; }
+.bar-fill { width: 100%; border-radius: 999px; }
+.bar-value { font-family: 'Manrope', sans-serif; font-size: 9px; font-weight: 700; color: #1a1c1b; }
+.bar-label { font-size: 8px; color: #3d4943; white-space: nowrap; }
+.section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.section-title { font-size: 16px; font-weight: 500; color: #1a1c1b; }
+.streak-badge { background: white; border-radius: 999px; padding: 4px 12px; font-size: 12px; font-weight: 500; color: #3abfff; display: flex; align-items: center; gap: 4px; }
+.supple-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 1px 4px rgba(0,105,76,0.04); }
+.supple-progress { margin-bottom: 20px; }
+.supple-progress-header { display: flex; justify-content: space-between; font-size: 11px; font-weight: 500; color: #3d4943; letter-spacing: 1.1px; text-transform: uppercase; margin-bottom: 8px; }
+.progress-track { background: #e8e8e6; height: 8px; border-radius: 999px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(to right, #3abfff, #d9b3e9); border-radius: 999px; width: 38%; }
+.supple-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; }
+.supple-item + .supple-item { border-top: 1px solid #f4f4f2; }
+.supple-left { display: flex; align-items: center; gap: 16px; }
+.supple-icon { width: 40px; height: 40px; border-radius: 50%; background: #f4f4f2; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+.supple-info { }
+.supple-name { font-size: 14px; font-weight: 500; color: #1a1c1b; }
+.supple-time { font-size: 10px; color: #3d4943; }
+.supple-check-done { width: 24px; height: 24px; border-radius: 50%; background: #7e87eb; border: 2px solid #7e87eb; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; }
+.supple-check { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #bccac1; cursor: pointer; transition: border-color 0.2s; flex-shrink: 0; }
+.supple-check:hover { border-color: #7e87eb; }
+.supple-item { transition: opacity 0.4s ease; }
+.supple-item.done { opacity: 0.4; }
+.supple-check.animating { animation: checkPop 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+@keyframes checkPop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.4); }
+  100% { transform: scale(1); }
+}
+.progress-fill { height: 100%; background: linear-gradient(to right, #3abfff, #d9b3e9); border-radius: 999px; transition: width 0.5s cubic-bezier(0.34,1.2,0.64,1); }
+.streak-badge { transition: all 0.3s; }
+.streak-badge.all-done { background: linear-gradient(135deg, #5951b4, #3abfff); color: white; }
+#confetti-canvas { position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 375px; height: 100vh; pointer-events: none; z-index: 9999; }
+/* Completion state */
+#supple-list { transition: opacity 0.38s ease, transform 0.38s ease; }
+#supple-list.exit { opacity: 0; transform: translateY(8px); pointer-events: none; }
+.done-banner {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 18px 8px 10px;
+  gap: 6px;
+  opacity: 0;
+  transform: translateY(12px) scale(0.95);
+  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.34, 1.3, 0.64, 1);
+}
+.done-banner.show { opacity: 1; transform: translateY(0) scale(1); }
+.done-icon { font-size: 32px; line-height: 1; margin-bottom: 2px; }
+.done-title { font-size: 16px; font-weight: 700; color: #5951b4; }
+.done-sub { font-size: 12px; color: #666; line-height: 1.6; }
+.worry-scroll { display: flex; gap: 12px; overflow-x: auto; padding: 0 16px; scrollbar-width: none; margin-bottom: 24px; }
+.worry-scroll::-webkit-scrollbar { display: none; }
+.worry-card { min-width: 220px; background: white; border-radius: 12px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); cursor: pointer; transition: transform 0.15s; }
+.worry-card:hover { transform: scale(1.02); }
+.worry-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; font-size: 16px; }
+.worry-title-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.worry-title { font-size: 14px; font-weight: 500; color: #1a1c1b; }
+.worry-participants { font-size: 10px; color: #3d4943; }
+.worry-snippet { background: #f4f4f2; border-radius: 8px; padding: 10px; font-size: 10px; color: #3d4943; line-height: 1.5; }
+.article-scroll { display: flex; gap: 13px; overflow-x: auto; padding: 0 16px; scrollbar-width: none; }
+.article-scroll::-webkit-scrollbar { display: none; }
+.article-card { min-width: 180px; background: white; border-radius: 12px; overflow: hidden; cursor: pointer; }
+.article-img { width: 100%; height: 110px; object-fit: cover; background: #e8e0f0; }
+.article-body { padding: 10px; }
+.article-title { font-size: 13px; font-weight: 600; color: #3d4943; line-height: 1.6; }
+.tabbar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 375px; background: white; box-shadow: 0 -4px 12px rgba(0,0,0,0.08); display: flex; justify-content: space-evenly; padding: 12px 0 20px; z-index: 100; }
+.tab-item { display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer; text-decoration: none; flex: 1; }
+.tab-icon { position: relative; width: 24px; height: 24px; }
+.tab-label { font-size: 8px; font-weight: 600; color: #666; }
+.tab-label.active { color: #5951b4; }
+.home-indicator { width: 134px; height: 5px; background: black; border-radius: 100px; margin: 8px auto 0; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="status-bar">
+    <span class="status-time">9:41</span>
+    <div class="status-icons">
+      <svg width="17" height="12" viewBox="0 0 17 12" fill="black"><rect x="0" y="8" width="3" height="4" rx="0.5"/><rect x="4.5" y="5.5" width="3" height="6.5" rx="0.5"/><rect x="9" y="3" width="3" height="9" rx="0.5"/><rect x="13.5" y="0" width="3" height="12" rx="0.5"/></svg>
+      <svg width="15" height="11" viewBox="0 0 15 11" fill="none"><circle cx="7.5" cy="10" r="1.5" fill="black"/><path d="M4.5 7c.8-.9 1.8-1.4 3-1.4s2.2.5 3 1.4" stroke="black" stroke-width="1.4" stroke-linecap="round"/><path d="M1.5 4C3.1 2.2 5.2 1.1 7.5 1.1S11.9 2.2 13.5 4" stroke="black" stroke-width="1.4" stroke-linecap="round"/></svg>
+      <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="0.5" y="0.5" width="21" height="11" rx="3.5" stroke="black" stroke-opacity="0.35"/><rect x="22" y="3.5" width="2.5" height="5" rx="1.25" fill="black" fill-opacity="0.35"/><rect x="2" y="2" width="17" height="8" rx="2.5" fill="black"/></svg>
+    </div>
+  </div>
+
+  <div class="greeting">
+    <div class="avatar" style="background:linear-gradient(135deg,#c8a0e8,#9c88d4);color:white;font-size:17px;font-weight:600;">莉</div>
+    <div class="greeting-text">おはよう、莉子さん</div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active">日</div>
+    <div class="tab">週</div>
+    <div class="tab">月</div>
+    <div class="tab">年</div>
+  </div>
+
+  <!-- 身体スコア -->
+  <div class="score-card">
+    <div class="score-left">
+      <h3>今日の身体スコア</h3>
+      <div>
+        <span class="score-number">78</span><span class="score-max">/100</span>
+      </div>
+    </div>
+    <div class="score-bars">
+      <div class="bar-item">
+        <div class="bar-track"><div class="bar-fill" style="height:74%;background:#ff80ab;"></div></div>
+        <div class="bar-value">74</div>
+        <div class="bar-label">気分</div>
+      </div>
+      <div class="bar-item">
+        <div class="bar-track"><div class="bar-fill" style="height:64%;background:#ffd54f;"></div></div>
+        <div class="bar-value">64</div>
+        <div class="bar-label">活動量</div>
+      </div>
+      <div class="bar-item">
+        <div class="bar-track"><div class="bar-fill" style="height:54%;background:#64b5f6;"></div></div>
+        <div class="bar-value">54</div>
+        <div class="bar-label">睡眠</div>
+      </div>
+      <div class="bar-item">
+        <div class="bar-track"><div class="bar-fill" style="height:68%;background:#4dd0e1;"></div></div>
+        <div class="bar-value">68</div>
+        <div class="bar-label">回復力</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 今日のサプリ -->
+  <div class="section" style="margin-top:24px;">
+    <div class="section-header">
+      <span class="section-title">今日のサプリ</span>
+      <span class="streak-badge">🎯 14日連続達成 !!</span>
+    </div>
+    <div class="supple-card">
+      <div class="supple-progress">
+        <div class="supple-progress-header"><span>DAY 16</span><span id="progress-text">1 / 3</span></div>
+        <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:33.3%"></div></div>
+      </div>
+      <div id="supple-list">
+        <div class="supple-item done" data-item="0">
+          <div class="supple-left">
+            <div class="supple-icon">💊</div>
+            <div class="supple-info">
+              <div class="supple-name">ビタミンB</div>
+              <div class="supple-time">朝食後 • 1粒</div>
+            </div>
+          </div>
+          <div class="supple-check-done" id="check-0">✓</div>
+        </div>
+        <div class="supple-item" data-item="1">
+          <div class="supple-left">
+            <div class="supple-icon">🧡</div>
+            <div class="supple-info">
+              <div class="supple-name">コエンザイムQ10</div>
+              <div class="supple-time">夕食後 • 2粒</div>
+            </div>
+          </div>
+          <div class="supple-check" id="check-1" onclick="handleCheck(1)"></div>
+        </div>
+        <div class="supple-item" data-item="2">
+          <div class="supple-left">
+            <div class="supple-icon">🐟</div>
+            <div class="supple-info">
+              <div class="supple-name">DHA/EPA</div>
+              <div class="supple-time">夕食後 • 2粒</div>
+            </div>
+          </div>
+          <div class="supple-check" id="check-2" onclick="handleCheck(2)"></div>
+        </div>
+      </div>
+      <div id="done-banner" class="done-banner">
+        <div class="done-icon">✨</div>
+        <div class="done-title">よくできました！</div>
+        <div class="done-sub">今日のサプリを全部摂取できました。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 最近の悩み -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-title">最近の悩み</span>
+    </div>
+  </div>
+  <div class="worry-scroll">
+    <a href="post-detail.html" class="worry-card" style="text-decoration:none;color:inherit;">
+      <div class="worry-icon" style="background:#ffeaea;">🌸</div>
+      <div class="worry-title-row">
+        <span class="worry-title">花粉症</span>
+        <span class="worry-participants">👥 2,431人が参加中</span>
+      </div>
+      <div class="worry-snippet">引っ越してから急に花粉症の症状が出るようになって、毎日鼻水が止まらない…！</div>
+    </a>
+    <a href="post-detail.html" class="worry-card" style="text-decoration:none;color:inherit;">
+      <div class="worry-icon" style="background:rgba(130,81,0,0.1);">🧍</div>
+      <div class="worry-title-row">
+        <span class="worry-title">肩痛</span>
+        <span class="worry-participants">👥 1,892人が参加中</span>
+      </div>
+      <div class="worry-snippet">「10分間の肩甲骨ストレッチ、毎日続けて5日目で楽に...」</div>
+    </a>
+    <a href="post-detail.html" class="worry-card" style="text-decoration:none;color:inherit;">
+      <div class="worry-icon" style="background:#e8f5e9;">😴</div>
+      <div class="worry-title-row">
+        <span class="worry-title">睡眠の質</span>
+        <span class="worry-participants">👥 3,102人が参加中</span>
+      </div>
+      <div class="worry-snippet">最近夜中に何度も目が覚めてしまって、朝起きても疲れが取れない感じ...</div>
+    </a>
+  </div>
+
+  <!-- 記事 -->
+  <div class="section">
+    <div class="section-header"><span class="section-title">記事</span></div>
+  </div>
+  <div class="article-scroll" style="margin-bottom:16px;">
+    <div class="article-card">
+      <img class="article-img" src="https://www.figma.com/api/mcp/asset/fa176aac-3fea-46d6-afa6-c7a28c46b6e1" onerror="this.style.background='#d9b3e9'" />
+      <div class="article-body">
+        <div class="article-title">免疫力と微量元素の関係を理解する</div>
+      </div>
+    </div>
+    <div class="article-card">
+      <img class="article-img" src="https://www.figma.com/api/mcp/asset/bebcdccc-9c0f-4440-aa6e-6f02dc0e7645" onerror="this.style.background='#b3d9e9'" />
+      <div class="article-body">
+        <div class="article-title">ビタミンDと睡眠の意外な関係</div>
+      </div>
+    </div>
+    <div class="article-card">
+      <img class="article-img" style="background:#e9d4f5;" />
+      <div class="article-body">
+        <div class="article-title">腸内環境を整える乳酸菌の選び方</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabbar">
+    <a class="tab-item" href="index.html">
+      <div class="tab-icon"><img src="https://www.figma.com/api/mcp/asset/cb193326-b07f-4b99-a233-8a2c19312e0a" style="position:absolute;display:block;top:2px;left:2px;width:20px;height:20px;"></div>
+      <span class="tab-label active">ホーム</span>
+    </a>
+    <a class="tab-item" href="shop.html">
+      <div class="tab-icon"><img src="https://www.figma.com/api/mcp/asset/dfc1bc64-ff40-4031-9172-4dc69cc9a8f0" style="position:absolute;display:block;top:7px;left:4px;width:16px;height:15px;"><img src="https://www.figma.com/api/mcp/asset/803ce1c6-3d63-4068-ab72-dae5a1afe4a9" style="position:absolute;display:block;top:2px;left:8px;width:8px;height:7px;"></div>
+      <span class="tab-label">ショップ</span>
+    </a>
+    <a class="tab-item" href="community.html">
+      <div class="tab-icon"><img src="https://www.figma.com/api/mcp/asset/066aa650-eded-4773-946e-c1f9c2967818" style="position:absolute;display:block;top:11px;left:11px;width:11px;height:9px;"><img src="https://www.figma.com/api/mcp/asset/461eb610-1f12-4b72-81ae-893467a29562" style="position:absolute;display:block;top:3px;left:2px;width:16px;height:14px;"></div>
+      <span class="tab-label">コミュニティー</span>
+    </a>
+  </div>
+</div>
+<canvas id="confetti-canvas"></canvas>
+
+<script>
+const state = [true, false, false];
+const TOTAL = 3;
+
+function handleCheck(idx) {
+  if (state[idx]) return;
+  state[idx] = true;
+
+  const checkEl = document.getElementById('check-' + idx);
+  const itemEl  = checkEl.closest('.supple-item');
+
+  checkEl.classList.add('animating');
+  checkEl.addEventListener('animationend', () => checkEl.classList.remove('animating'), { once: true });
+
+  setTimeout(() => {
+    checkEl.classList.remove('supple-check');
+    checkEl.removeAttribute('onclick');
+    checkEl.className = 'supple-check-done';
+    checkEl.textContent = '✓';
+    itemEl.classList.add('done');
+  }, 180);
+
+  const doneCount = state.filter(Boolean).length;
+  updateProgress(doneCount);
+
+  if (doneCount === TOTAL) setTimeout(triggerAllDone, 420);
+}
+
+function updateProgress(doneCount) {
+  const pct = (doneCount / TOTAL) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = doneCount + ' / ' + TOTAL;
+}
+
+function triggerAllDone() {
+  // Badge update
+  const badge = document.querySelector('.streak-badge');
+  badge.classList.add('all-done');
+  badge.textContent = '🎉 今日のサプリ完了！';
+
+  // Confetti burst immediately
+  launchConfetti();
+
+  // Card completion transition — slight delay so confetti is already flying
+  setTimeout(showCompletionCard, 600);
+}
+
+function showCompletionCard() {
+  const list   = document.getElementById('supple-list');
+  const banner = document.getElementById('done-banner');
+
+  // Step 1: fade list out
+  list.classList.add('exit');
+
+  // Step 2: after fade, collapse list and reveal banner
+  setTimeout(() => {
+    list.style.display = 'none';
+    banner.style.display = 'flex';
+    // Double rAF to let display:flex render before triggering the transition
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      banner.classList.add('show');
+    }));
+  }, 400);
+}
+
+// ── Confetti — shoots up from below the card, falls back down ────────────
+function launchConfetti() {
+  const canvas = document.getElementById('confetti-canvas');
+  const ctx    = canvas.getContext('2d');
+  canvas.width  = 375;
+  canvas.height = window.innerHeight;
+
+  // Launch origin: bottom-centre of the supple card
+  const card    = document.querySelector('.supple-card');
+  const rect    = card.getBoundingClientRect();
+  const originX = rect.left + rect.width  / 2;   // horizontal centre
+  const originY = rect.bottom - 10;               // just below card bottom
+
+  const SPREAD  = 100;   // max horizontal offset from centre (keeps it focused)
+  const colors  = ['#5951b4','#3abfff','#d9b3e9','#ff80ab','#ffd54f','#4dd0e1','#7e87eb','#ffffff'];
+  const particles = [];
+
+  // Three staggered bursts for a richer effect
+  const BURSTS = [
+    { count: 45, delay: 0   },
+    { count: 30, delay: 80  },
+    { count: 25, delay: 160 },
+  ];
+
+  function spawnBurst(count) {
+    for (let i = 0; i < count; i++) {
+      const col   = colors[Math.floor(Math.random() * colors.length)];
+      const isCircle = Math.random() < 0.25;
+      particles.push({
+        x:         originX + (Math.random() - 0.5) * SPREAD * 2,
+        y:         originY,
+        w:         isCircle ? 5 + Math.random() * 4 : 7 + Math.random() * 5,
+        h:         isCircle ? 0 : 3 + Math.random() * 3,   // 0 = circle
+        color:     col,
+        rotation:  Math.random() * Math.PI * 2,
+        rotSpeed:  (Math.random() - 0.5) * 0.22,
+        vx:        (Math.random() - 0.5) * 5,              // narrow horizontal spread
+        vy:        -(9 + Math.random() * 11),               // strong upward launch
+        gravity:   0.32 + Math.random() * 0.12,            // individual fall rate
+        opacity:   1,
+      });
+    }
+  }
+
+  // First burst is synchronous so the draw loop has particles on frame 1.
+  // Subsequent bursts are staggered via setTimeout.
+  spawnBurst(45);
+  setTimeout(() => spawnBurst(30), 80);
+  setTimeout(() => spawnBurst(25), 160);
+
+  let frame = 0;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      p.x  += p.vx;
+      p.y  += p.vy;
+      p.vy += p.gravity;
+      p.vx *= 0.985;
+      p.rotation += p.rotSpeed;
+      if (frame > 55) p.opacity -= 0.018;
+      if (p.opacity <= 0) return;
+
+      ctx.save();
+      ctx.globalAlpha = p.opacity;
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rotation);
+      ctx.fillStyle = p.color;
+      if (p.h === 0) {
+        ctx.beginPath();
+        ctx.arc(0, 0, p.w / 2, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      }
+      ctx.restore();
+    });
+    frame++;
+    // Keep running for at least 15 frames to let the staggered bursts spawn,
+    // then stop only when every particle has fully faded.
+    if (frame < 15 || particles.some(p => p.opacity > 0)) {
+      requestAnimationFrame(draw);
+    } else {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  }
+
+  // Start drawing after first burst spawns
+  requestAnimationFrame(draw);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=375, initial-scale=1.0">
+<title>DHC - あなたへのおすすめ</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #f0f0f0; display: flex; justify-content: center; font-family: 'Noto Sans JP', sans-serif; }
+.phone { width: 375px; min-height: 100vh; background: linear-gradient(180deg, rgba(179,206,233,0.2) 0%, rgba(229,229,229,0.2) 24%), #f9f9f7; padding-bottom: 100px; }
+.top-bar { display: flex; align-items: center; gap: 12px; padding: 50px 16px 16px; }
+.back-btn { width: 36px; height: 36px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.1); text-decoration: none; color: #1a1c1b; flex-shrink: 0; }
+.page-title { font-size: 20px; font-weight: 700; color: #1a1c1b; }
+
+/* Hero reason card */
+.reason-card { margin: 0 16px 20px; background: linear-gradient(135deg, #5951b4 0%, #9c88d4 100%); border-radius: 16px; padding: 20px; color: white; }
+.reason-label { font-size: 11px; opacity: 0.8; margin-bottom: 6px; letter-spacing: 0.04em; }
+.reason-title { font-size: 17px; font-weight: 700; line-height: 1.5; margin-bottom: 14px; }
+.reason-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.reason-tag { background: rgba(255,255,255,0.2); font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 999px; }
+
+/* Section */
+.section { padding: 0 16px; margin-bottom: 8px; }
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.section-title { font-size: 15px; font-weight: 600; color: #1a1c1b; }
+.section-more { font-size: 12px; color: #5951b4; font-weight: 600; }
+
+/* Recommend card (vertical) */
+.rec-card { background: white; border-radius: 16px; margin-bottom: 12px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.06); display: flex; align-items: stretch; }
+.rec-img { width: 100px; flex-shrink: 0; background: #fafaf9; display: flex; align-items: center; justify-content: center; padding: 12px; }
+.rec-img img { max-width: 100%; max-height: 76px; object-fit: contain; }
+.rec-body { flex: 1; padding: 14px 14px 14px 4px; display: flex; flex-direction: column; justify-content: space-between; }
+.rec-name { font-size: 13px; font-weight: 600; color: #1a1c1b; margin-bottom: 4px; line-height: 1.4; }
+.rec-reason { font-size: 11px; color: #666; line-height: 1.5; margin-bottom: 8px; }
+.rec-bottom { display: flex; align-items: center; justify-content: space-between; }
+.rec-price { font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 800; color: #1a1c1b; }
+.rec-price-tax { font-size: 9px; color: #666; margin-left: 2px; font-family: 'Noto Sans JP', sans-serif; font-weight: 400; }
+.rec-add-btn { background: #5951b4; color: white; border: none; border-radius: 999px; font-size: 11px; font-weight: 600; padding: 6px 12px; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; white-space: nowrap; }
+.rec-add-btn.added { background: #e8f5e9; color: #2e7d32; }
+
+/* Match badge */
+.match-badge { display: inline-flex; align-items: center; gap: 4px; background: #f0eefa; color: #5951b4; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 999px; margin-bottom: 6px; }
+.match-dot { width: 6px; height: 6px; border-radius: 50%; background: #5951b4; }
+
+/* Horizontal scroll cards */
+.scroll-section { margin-bottom: 20px; }
+.scroll-section .section-header { padding: 0 16px; }
+.horiz-scroll { display: flex; gap: 12px; overflow-x: auto; padding: 0 16px 8px; scrollbar-width: none; }
+.horiz-scroll::-webkit-scrollbar { display: none; }
+.mini-card { min-width: 130px; background: white; border-radius: 14px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.06); cursor: pointer; }
+.mini-card-img { height: 100px; background: #fafaf9; display: flex; align-items: center; justify-content: center; }
+.mini-card-img img { max-width: 70%; max-height: 70%; object-fit: contain; }
+.mini-card-info { padding: 10px; }
+.mini-card-name { font-size: 11px; font-weight: 600; color: #1a1c1b; margin-bottom: 2px; line-height: 1.3; }
+.mini-card-price { font-family: 'Manrope', sans-serif; font-size: 12px; font-weight: 800; color: #1a1c1b; }
+.mini-add { width: 100%; margin-top: 8px; height: 28px; border-radius: 999px; border: 1.5px solid #5951b4; background: transparent; color: #5951b4; font-size: 11px; font-weight: 600; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; }
+
+/* Community snippet */
+.community-snap { margin: 0 16px 20px; background: white; border-radius: 16px; padding: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+.snap-label { font-size: 11px; color: #999; margin-bottom: 10px; font-weight: 500; }
+.snap-item { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 12px; }
+.snap-item:last-child { margin-bottom: 0; }
+.snap-avatar { width: 32px; height: 32px; border-radius: 50%; background: #f0eefa; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+.snap-text { font-size: 12px; color: #3d4943; line-height: 1.6; flex: 1; }
+.snap-name { font-weight: 600; color: #5951b4; }
+.snap-days { font-size: 10px; color: #999; margin-top: 2px; }
+
+/* Tabbar */
+.tabbar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 375px; background: white; box-shadow: 0 -4px 12px rgba(0,0,0,0.08); display: flex; justify-content: space-evenly; padding: 12px 0 20px; z-index: 100; }
+.tab-item { display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer; text-decoration: none; flex: 1; }
+.tab-icon { position: relative; width: 24px; height: 24px; }
+.tab-icon img { position: absolute; display: block; }
+.tab-label { font-size: 8px; font-weight: 600; color: #666; }
+.tab-label.active { color: #5951b4; }
+
+/* Toast */
+.toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px); background: #1a1c1b; color: white; font-size: 13px; font-weight: 600; padding: 10px 20px; border-radius: 999px; opacity: 0; transition: all 0.3s ease; z-index: 200; pointer-events: none; white-space: nowrap; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="top-bar">
+    <a href="shop.html" class="back-btn">←</a>
+    <span class="page-title">あなたへのおすすめ</span>
+  </div>
+
+  <!-- AIパーソナライズ理由カード -->
+  <div class="reason-card">
+    <div class="reason-label">AIがあなたの状態を分析しました</div>
+    <div class="reason-title">今の習慣をもっと<br>サポートできるサプリがあります✨</div>
+    <div class="reason-tags">
+      <span class="reason-tag">🏃 運動後の回復</span>
+      <span class="reason-tag">😴 睡眠の質</span>
+      <span class="reason-tag">🧠 集中力アップ</span>
+    </div>
+  </div>
+
+  <!-- あなたにぴったり -->
+  <div class="section scroll-section">
+    <div class="section-header">
+      <div class="section-title">あなたにぴったり</div>
+      <span class="section-more">すべて見る</span>
+    </div>
+
+    <!-- Rec 1 -->
+    <div class="rec-card">
+      <div class="rec-img">
+        <img src="https://www.figma.com/api/mcp/asset/97a7d9ab-c4ca-4e3a-babb-2f9dc4fd6154" onerror="this.parentNode.innerHTML='<div style=font-size:36px>🧘</div>'" />
+      </div>
+      <div class="rec-body">
+        <div>
+          <div class="match-badge"><span class="match-dot"></span>98% マッチ</div>
+          <div class="rec-name">ギャバ(GABA) 30日分</div>
+          <div class="rec-reason">仕事中の集中力低下が気になる方に。ストレス緩和と睡眠の質改善をサポート。</div>
+        </div>
+        <div class="rec-bottom">
+          <div><span class="rec-price">¥1,512</span><span class="rec-price-tax">税込</span></div>
+          <button class="rec-add-btn" onclick="addToPlan(this, 'GABA 30日分')">プランに追加</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rec 2 -->
+    <div class="rec-card">
+      <div class="rec-img">
+        <img src="https://www.figma.com/api/mcp/asset/7a6cc236-edbe-440e-a30c-3e314a874fb9" onerror="this.parentNode.innerHTML='<div style=font-size:36px>🌱</div>'" />
+      </div>
+      <div class="rec-body">
+        <div>
+          <div class="match-badge"><span class="match-dot"></span>95% マッチ</div>
+          <div class="rec-name">届くビフィズスEX 30日分</div>
+          <div class="rec-reason">腸内環境を整えることで、栄養吸収率を高め、現在のプランの効果を最大化します。</div>
+        </div>
+        <div class="rec-bottom">
+          <div><span class="rec-price">¥1,944</span><span class="rec-price-tax">税込</span></div>
+          <button class="rec-add-btn" onclick="addToPlan(this, 'ビフィズスEX 30日分')">プランに追加</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rec 3 -->
+    <div class="rec-card">
+      <div class="rec-img" style="background:#f0f8ff;">
+        <div style="font-size:44px;">🐟</div>
+      </div>
+      <div class="rec-body">
+        <div>
+          <div class="match-badge"><span class="match-dot"></span>91% マッチ</div>
+          <div class="rec-name">DHA/EPA 30日分</div>
+          <div class="rec-reason">脳の働きと関節の柔軟性をサポート。運動後の回復にも効果的なオメガ3脂肪酸。</div>
+        </div>
+        <div class="rec-bottom">
+          <div><span class="rec-price">¥1,188</span><span class="rec-price-tax">税込</span></div>
+          <button class="rec-add-btn" onclick="addToPlan(this, 'DHA/EPA 30日分')">プランに追加</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 同じ目標の人が使っている -->
+  <div class="scroll-section">
+    <div class="section-header">
+      <div class="section-title">同じ目標の人に人気</div>
+      <span class="section-more">もっと見る</span>
+    </div>
+    <div class="horiz-scroll">
+      <a href="product-detail.html" class="mini-card" style="text-decoration:none;color:inherit;">
+        <div class="mini-card-img">
+          <img src="https://www.figma.com/api/mcp/asset/5bd4c81e-9d4c-466f-bc87-97c19172ce99" />
+        </div>
+        <div class="mini-card-info">
+          <div class="mini-card-name">ビタミン 30日分</div>
+          <div class="mini-card-price">¥1,296</div>
+          <button class="mini-add" onclick="event.preventDefault();addToPlan(this,'ビタミン 30日分')">+ 追加</button>
+        </div>
+      </a>
+      <a href="product-detail.html" class="mini-card" style="text-decoration:none;color:inherit;">
+        <div class="mini-card-img">
+          <img src="https://www.figma.com/api/mcp/asset/d3a2da8e-d085-439b-ba1a-50770a3f3e55" />
+        </div>
+        <div class="mini-card-info">
+          <div class="mini-card-name">マルチビタミン 30日分</div>
+          <div class="mini-card-price">¥1,296</div>
+          <button class="mini-add" onclick="event.preventDefault();addToPlan(this,'マルチビタミン 30日分')">+ 追加</button>
+        </div>
+      </a>
+      <a href="product-detail.html" class="mini-card" style="text-decoration:none;color:inherit;">
+        <div class="mini-card-img" style="background:#fef3f3;">
+          <div style="font-size:36px;">🌿</div>
+        </div>
+        <div class="mini-card-info">
+          <div class="mini-card-name">プラセンタエキス 30日分</div>
+          <div class="mini-card-price">¥2,160</div>
+          <button class="mini-add" onclick="event.preventDefault();addToPlan(this,'プラセンタエキス')">+ 追加</button>
+        </div>
+      </a>
+      <a href="product-detail.html" class="mini-card" style="text-decoration:none;color:inherit;">
+        <div class="mini-card-img">
+          <img src="https://www.figma.com/api/mcp/asset/4754e3b0-8aeb-41e4-b511-bbcc139b16d2" onerror="this.parentNode.innerHTML='<div style=font-size:36px>💊</div>'" />
+        </div>
+        <div class="mini-card-info">
+          <div class="mini-card-name">コラーゲン 30日分</div>
+          <div class="mini-card-price">¥1,620</div>
+          <button class="mini-add" onclick="event.preventDefault();addToPlan(this,'コラーゲン')">+ 追加</button>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- コミュニティの声 -->
+  <div class="section" style="margin-bottom:20px;">
+    <div class="section-header">
+      <div class="section-title">みんなの声</div>
+      <a href="community.html" class="section-more">コミュニティへ</a>
+    </div>
+    <div class="community-snap">
+      <div class="snap-label">同じ目標を持つユーザーのレビュー</div>
+      <div class="snap-item">
+        <div class="snap-avatar">🏃</div>
+        <div>
+          <div class="snap-text"><span class="snap-name">KentoFit</span>　DHA/EPAを45日続けたら、トレーニング後の筋肉疲労の回復が明らかに早くなりました！💪</div>
+          <div class="snap-days">DAY 45 • 89いいね</div>
+        </div>
+      </div>
+      <div class="snap-item">
+        <div class="snap-avatar">🧘</div>
+        <div>
+          <div class="snap-text"><span class="snap-name">MindfulMei</span>　GABAを飲み始めてから夜中に目が覚めることが減って、朝スッキリ起きられるようになりました😊</div>
+          <div class="snap-days">DAY 30 • 54いいね</div>
+        </div>
+      </div>
+      <div class="snap-item">
+        <div class="snap-avatar">🌸</div>
+        <div>
+          <div class="snap-text"><span class="snap-name">Hana_Wellness</span>　ビフィズス菌を追加してから、マルチビタミンの効き目が上がった気がします✨</div>
+          <div class="snap-days">DAY 18 • 24いいね</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabbar">
+    <a class="tab-item" href="index.html">
+      <div class="tab-icon"><img src="https://www.figma.com/api/mcp/asset/f435dbfe-7b63-40bc-b8fb-ba68911f37b3" style="position:absolute;display:block;top:2px;left:2px;width:20px;height:20px;"></div>
+      <span class="tab-label">ホーム</span>
+    </a>
+    <a class="tab-item" href="shop.html">
+      <div class="tab-icon"><img src="https://www.figma.com/api/mcp/asset/28d7b715-bf57-4949-942e-3d68bb56cf94" style="position:absolute;display:block;top:7px;left:4px;width:16px;height:15px;"><img src="https://www.figma.com/api/mcp/asset/490a58e5-54a6-4f01-8985-e5e3310aea12" style="position:absolute;display:block;top:2px;left:8px;width:8px;height:7px;"></div>
+      <span class="tab-label active">ショップ</span>
+    </a>
+    <a class="tab-item" href="community.html">
+      <div class="tab-icon"><img src="https://www.figma.com/api/mcp/asset/066aa650-eded-4773-946e-c1f9c2967818" style="position:absolute;display:block;top:11px;left:11px;width:11px;height:9px;"><img src="https://www.figma.com/api/mcp/asset/461eb610-1f12-4b72-81ae-893467a29562" style="position:absolute;display:block;top:3px;left:2px;width:16px;height:14px;"></div>
+      <span class="tab-label">コミュニティー</span>
+    </a>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+function addToPlan(btn, name) {
+  if (btn.classList.contains('added')) return;
+  btn.classList.add('added');
+  btn.textContent = '✓ 追加済み';
+
+  const toast = document.getElementById('toast');
+  toast.textContent = name + ' をプランに追加しました！';
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2200);
+}
+</script>
+</body>
+</html>

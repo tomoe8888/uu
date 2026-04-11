@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=375, initial-scale=1.0">
+<title>DHC - 投稿詳細</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #f0f0f0; display: flex; justify-content: center; font-family: 'Noto Sans JP', sans-serif; }
+.phone { width: 375px; min-height: 100vh; background: #faf8f5; padding-bottom: 100px; }
+.top-bar { display: flex; align-items: center; gap: 12px; padding: 50px 16px 16px; }
+.back-btn { width: 36px; height: 36px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.1); text-decoration: none; color: #1a1c1b; flex-shrink: 0; }
+.top-title { font-size: 16px; font-weight: 600; color: #1a1c1b; }
+.post-card { background: white; margin-bottom: 8px; padding: 20px 16px; }
+.post-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.user-row { display: flex; align-items: center; gap: 12px; }
+.avatar { width: 44px; height: 44px; border-radius: 50%; overflow: hidden; background: #e8e0f0; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+.user-name { font-size: 15px; font-weight: 600; color: #1a1c1b; }
+.user-meta { font-size: 12px; color: #999; margin-top: 2px; }
+.day-badge { background: #f0eefa; color: #5951b4; font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 999px; }
+.post-body { font-size: 15px; color: #3d4943; line-height: 1.8; margin-bottom: 16px; }
+.post-actions { display: flex; gap: 24px; padding: 12px 0; border-top: 1px solid #f4f4f2; border-bottom: 1px solid #f4f4f2; margin-bottom: 16px; }
+.action-btn { display: flex; align-items: center; gap: 6px; font-size: 14px; color: #666; cursor: pointer; }
+.action-btn.liked { color: #e91e63; }
+.product-link { background: #fafafa; border-radius: 12px; padding: 12px; display: flex; align-items: center; gap: 12px; cursor: pointer; border: 1px solid #f0eefa; }
+.product-link-img { width: 52px; height: 52px; border-radius: 8px; background: white; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.product-link-img img { max-width: 90%; max-height: 90%; object-fit: contain; }
+.product-link-info { flex: 1; }
+.product-link-name { font-size: 12px; font-weight: 600; color: #3d4943; margin-bottom: 4px; }
+.product-link-progress { }
+.product-link-bar { background: #e8e8e6; height: 5px; border-radius: 999px; overflow: hidden; margin-top: 4px; }
+.product-link-fill { height: 100%; background: linear-gradient(to right, #5951b4, #9c88d4); border-radius: 999px; }
+.product-link-pct { font-size: 11px; font-weight: 700; color: #5951b4; }
+.section-title { font-size: 15px; font-weight: 600; color: #1a1c1b; margin-bottom: 16px; }
+.comments-section { background: white; padding: 20px 16px; }
+.comment-item { display: flex; gap: 10px; margin-bottom: 20px; }
+.comment-avatar { width: 36px; height: 36px; border-radius: 50%; background: #f0eefa; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+.comment-bubble { background: #f4f4f2; border-radius: 12px 12px 12px 0; padding: 10px 14px; flex: 1; }
+.comment-user { font-size: 12px; font-weight: 600; color: #5951b4; margin-bottom: 4px; }
+.comment-text { font-size: 13px; color: #3d4943; line-height: 1.6; }
+.comment-time { font-size: 11px; color: #999; margin-top: 4px; }
+.comment-input-area { background: white; position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 375px; padding: 12px 16px 28px; box-shadow: 0 -4px 12px rgba(0,0,0,0.08); display: flex; gap: 10px; align-items: center; }
+.comment-input { flex: 1; height: 42px; background: #f4f4f2; border: none; border-radius: 999px; padding: 0 16px; font-size: 14px; font-family: 'Noto Sans JP', sans-serif; outline: none; }
+.comment-send { width: 42px; height: 42px; border-radius: 50%; background: #5951b4; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; color: white; font-size: 16px; }
+.related-title { font-size: 15px; font-weight: 600; color: #1a1c1b; padding: 20px 16px 12px; }
+.related-scroll { display: flex; gap: 10px; overflow-x: auto; padding: 0 16px 16px; scrollbar-width: none; }
+.related-scroll::-webkit-scrollbar { display: none; }
+.related-card { min-width: 140px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.06); cursor: pointer; }
+.related-img { height: 90px; background: #f4f4f2; display: flex; align-items: center; justify-content: center; }
+.related-img img { max-width: 70%; max-height: 70%; object-fit: contain; }
+.related-info { padding: 8px; }
+.related-name { font-size: 11px; font-weight: 500; color: #1a1c1b; margin-bottom: 4px; }
+.related-price { font-family: 'Manrope', sans-serif; font-size: 12px; font-weight: 800; color: #1a1c1b; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="top-bar">
+    <a href="community.html" class="back-btn">←</a>
+    <span class="top-title">投稿詳細</span>
+  </div>
+
+  <div class="post-card">
+    <div class="post-header">
+      <div class="user-row">
+        <div class="avatar" style="background:linear-gradient(135deg,#7e87eb,#5951b4);color:white;font-size:14px;font-weight:700;letter-spacing:0.5px;">YK</div>
+        <div>
+          <div class="user-name">Yuki.K</div>
+          <div class="user-meta">2 hours ago • マルチビタミン愛用中</div>
+        </div>
+      </div>
+      <div class="day-badge">DAY 23</div>
+    </div>
+    <div class="post-body">
+      最近、DHCのマルチビタミンを飲み始めてから、午後の集中力が途切れにくくなった気がします。仕事中のあくびが減って、クリエイティブな作業が捗るようになりました！✨ 継続は力なりですね。<br><br>
+      特に感じるのは夕方3時〜5時の魔の時間帯。以前はこの時間帯に必ずコーヒーを2〜3杯飲まないとダメだったのが、今では1杯で済むようになりました☕
+    </div>
+    <div class="post-actions">
+      <div class="action-btn liked">❤️ 128</div>
+      <div class="action-btn">💬 14</div>
+      <div class="action-btn">🔗 シェア</div>
+    </div>
+    <div class="product-link">
+      <div class="product-link-img">
+        <img src="https://www.figma.com/api/mcp/asset/5bd4c81e-9d4c-466f-bc87-97c19172ce99" />
+      </div>
+      <div class="product-link-info">
+        <div class="product-link-name">Multi Vitamin Plan 60 Days</div>
+        <div class="product-link-progress">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
+            <span style="font-size:10px;color:#999;">達成率</span>
+            <span class="product-link-pct">77%</span>
+          </div>
+          <div class="product-link-bar"><div class="product-link-fill" style="width:77%;"></div></div>
+        </div>
+      </div>
+      <a href="product-detail.html" style="text-decoration:none;"><div style="background:#5951b4;color:white;font-size:11px;font-weight:600;padding:6px 12px;border-radius:999px;white-space:nowrap;">詳細 →</div></a>
+    </div>
+  </div>
+
+  <div class="comments-section">
+    <div class="section-title">コメント (14件)</div>
+
+    <div class="comment-item">
+      <div class="comment-avatar">🌸</div>
+      <div>
+        <div class="comment-bubble">
+          <div class="comment-user">Hana_Wellness</div>
+          <div class="comment-text">私も同じです！！飲み始めて2週間で変化を感じ始めました。継続が大事ですよね✨</div>
+          <div class="comment-time">1 hour ago</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="comment-item">
+      <div class="comment-avatar">💪</div>
+      <div>
+        <div class="comment-bubble">
+          <div class="comment-user">KentoFit</div>
+          <div class="comment-text">集中力アップに加えて、睡眠の質も改善した気がします。おすすめです！</div>
+          <div class="comment-time">2 hours ago</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="comment-item">
+      <div class="comment-avatar">🧘</div>
+      <div>
+        <div class="comment-bubble">
+          <div class="comment-user">MindfulMei</div>
+          <div class="comment-text">食後に飲むのを忘れないようにアラーム設定しました。このアプリのリマインダー機能がすごく助かってます😊</div>
+          <div class="comment-time">3 hours ago</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="comment-item">
+      <div class="comment-avatar">🌿</div>
+      <div>
+        <div class="comment-bubble">
+          <div class="comment-user">NaturalRiko</div>
+          <div class="comment-text">どのタイミングで飲んでいますか？朝食後がいいのか夕食後がいいのか迷ってます...</div>
+          <div class="comment-time">5 hours ago</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="related-title">関連商品</div>
+  <div class="related-scroll">
+    <a href="product-detail.html" class="related-card" style="text-decoration:none;color:inherit;">
+      <div class="related-img"><img src="https://www.figma.com/api/mcp/asset/d3a2da8e-d085-439b-ba1a-50770a3f3e55" /></div>
+      <div class="related-info">
+        <div class="related-name">マルチビタミン 30日分</div>
+        <div class="related-price">¥1,296</div>
+      </div>
+    </a>
+    <a href="product-detail.html" class="related-card" style="text-decoration:none;color:inherit;">
+      <div class="related-img"><img src="https://www.figma.com/api/mcp/asset/97a7d9ab-c4ca-4e3a-babb-2f9dc4fd6154" /></div>
+      <div class="related-info">
+        <div class="related-name">GABA 30日分</div>
+        <div class="related-price">¥1,512</div>
+      </div>
+    </a>
+    <a href="product-detail.html" class="related-card" style="text-decoration:none;color:inherit;">
+      <div class="related-img" style="font-size:32px;">🐟</div>
+      <div class="related-info">
+        <div class="related-name">DHA/EPA 30日分</div>
+        <div class="related-price">¥1,188</div>
+      </div>
+    </a>
+  </div>
+
+  <div class="comment-input-area">
+    <input class="comment-input" placeholder="コメントを入力..." />
+    <button class="comment-send" onclick="alert('コメントを送信しました！')">↑</button>
+  </div>
+</div>
+</body>
+</html>

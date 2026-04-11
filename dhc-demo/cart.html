@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=375, initial-scale=1.0">
+<title>DHC - カート</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #f0f0f0; display: flex; justify-content: center; font-family: 'Noto Sans JP', sans-serif; }
+.phone { width: 375px; min-height: 100vh; background: #f9f9f7; padding-bottom: 160px; }
+.top-bar { display: flex; align-items: center; gap: 12px; padding: 50px 16px 16px; }
+.back-btn { width: 36px; height: 36px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.1); text-decoration: none; color: #1a1c1b; }
+.top-title { font-size: 20px; font-weight: 700; color: #1a1c1b; }
+.cart-count { font-size: 13px; color: #666; margin-left: 4px; }
+.section-card { background: white; margin: 0 0 8px; padding: 16px; }
+.cart-item { display: flex; gap: 12px; padding: 12px 0; }
+.cart-item + .cart-item { border-top: 1px solid #f4f4f2; }
+.cart-img { width: 80px; height: 80px; border-radius: 10px; background: #fafaf9; border: 1px solid #f5f5f4; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
+.cart-img img { max-width: 90%; max-height: 90%; object-fit: contain; }
+.cart-details { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+.cart-name { font-size: 14px; font-weight: 500; color: #1a1c1b; line-height: 1.4; margin-bottom: 4px; }
+.cart-sub { font-size: 11px; color: #666; margin-bottom: 8px; }
+.cart-bottom { display: flex; align-items: center; justify-content: space-between; }
+.cart-price { font-family: 'Manrope', sans-serif; font-size: 16px; font-weight: 800; color: #1a1c1b; }
+.qty-control { display: flex; align-items: center; gap: 10px; }
+.qty-btn { width: 28px; height: 28px; border-radius: 50%; background: #f4f4f2; border: none; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #5951b4; }
+.qty-num { font-family: 'Manrope', sans-serif; font-size: 15px; font-weight: 700; color: #1a1c1b; min-width: 20px; text-align: center; }
+.delete-btn { color: #ccc; font-size: 18px; cursor: pointer; margin-top: -4px; }
+.plan-banner { margin: 0 0 8px; background: linear-gradient(135deg, #5951b4, #9c88d4); padding: 16px; color: white; }
+.plan-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+.plan-sub { font-size: 12px; opacity: 0.85; }
+.plan-badge { display: inline-block; background: rgba(255,255,255,0.25); padding: 2px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; margin-top: 8px; }
+.coupon-row { background: white; padding: 16px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; cursor: pointer; }
+.coupon-icon { font-size: 24px; }
+.coupon-text { flex: 1; font-size: 14px; color: #1a1c1b; }
+.coupon-arrow { color: #ccc; font-size: 18px; }
+.summary-card { background: white; padding: 20px 16px; margin-bottom: 8px; }
+.summary-title { font-size: 16px; font-weight: 600; color: #1a1c1b; margin-bottom: 16px; }
+.summary-row { display: flex; justify-content: space-between; font-size: 14px; color: #3d4943; margin-bottom: 10px; }
+.summary-row.total { font-weight: 700; font-size: 16px; color: #1a1c1b; padding-top: 12px; border-top: 1px solid #f4f4f2; margin-top: 4px; }
+.summary-row.discount { color: #e53935; }
+.bottom-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 375px; background: white; padding: 16px 16px 32px; box-shadow: 0 -4px 12px rgba(0,0,0,0.08); }
+.checkout-btn { width: 100%; height: 54px; background: #5951b4; color: white; border: none; border-radius: 999px; font-size: 16px; font-weight: 600; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; }
+.checkout-total { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.checkout-total-label { font-size: 13px; color: #666; }
+.checkout-total-price { font-family: 'Manrope', sans-serif; font-size: 22px; font-weight: 800; color: #1a1c1b; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="top-bar">
+    <a href="shop.html" class="back-btn">←</a>
+    <span class="top-title">カート</span><span class="cart-count">3点</span>
+  </div>
+
+  <div class="plan-banner">
+    <div class="plan-title">🎉 定期購入で20%OFF</div>
+    <div class="plan-sub">毎月自動でお届け。いつでもキャンセル可能です</div>
+    <span class="plan-badge">プランに変更する →</span>
+  </div>
+
+  <div class="section-card">
+    <div class="cart-item">
+      <div class="cart-img">
+        <img src="https://www.figma.com/api/mcp/asset/5bd4c81e-9d4c-466f-bc87-97c19172ce99" onerror="this.parentNode.innerHTML='💊'" />
+      </div>
+      <div class="cart-details">
+        <div>
+          <div class="cart-name">ビタミン 30日分</div>
+          <div class="cart-sub">一粒で効率補給</div>
+        </div>
+        <div class="cart-bottom">
+          <span class="cart-price">¥1,296</span>
+          <div class="qty-control">
+            <button class="qty-btn">−</button>
+            <span class="qty-num">1</span>
+            <button class="qty-btn">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="delete-btn">×</div>
+    </div>
+    <div class="cart-item">
+      <div class="cart-img">
+        <img src="https://www.figma.com/api/mcp/asset/d3a2da8e-d085-439b-ba1a-50770a3f3e55" onerror="this.parentNode.innerHTML='💊'" />
+      </div>
+      <div class="cart-details">
+        <div>
+          <div class="cart-name">マルチビタミン 30日分</div>
+          <div class="cart-sub">乳酸菌配合</div>
+        </div>
+        <div class="cart-bottom">
+          <span class="cart-price">¥1,296</span>
+          <div class="qty-control">
+            <button class="qty-btn">−</button>
+            <span class="qty-num">2</span>
+            <button class="qty-btn">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="delete-btn">×</div>
+    </div>
+    <div class="cart-item">
+      <div class="cart-img" style="font-size:32px;">🐟</div>
+      <div class="cart-details">
+        <div>
+          <div class="cart-name">DHA/EPA 30日分</div>
+          <div class="cart-sub">オメガ3脂肪酸</div>
+        </div>
+        <div class="cart-bottom">
+          <span class="cart-price">¥1,188</span>
+          <div class="qty-control">
+            <button class="qty-btn">−</button>
+            <span class="qty-num">1</span>
+            <button class="qty-btn">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="delete-btn">×</div>
+    </div>
+  </div>
+
+  <div class="coupon-row">
+    <span class="coupon-icon">🎟</span>
+    <span class="coupon-text">クーポンを使用する</span>
+    <span class="coupon-arrow">›</span>
+  </div>
+
+  <div class="summary-card">
+    <div class="summary-title">注文概要</div>
+    <div class="summary-row"><span>小計 (4点)</span><span>¥4,776</span></div>
+    <div class="summary-row discount"><span>割引 (会員特典)</span><span>−¥480</span></div>
+    <div class="summary-row"><span>送料</span><span style="color:#2e7d32;font-weight:600;">無料</span></div>
+    <div class="summary-row total"><span>合計</span><span>¥4,296</span></div>
+    <div style="font-size:11px;color:#999;margin-top:8px;">税込価格 • 2〜3営業日でお届け</div>
+  </div>
+
+  <div class="bottom-bar">
+    <div class="checkout-total">
+      <span class="checkout-total-label">合計</span>
+      <span class="checkout-total-price">¥4,296 <span style="font-size:13px;font-weight:400;color:#666;">税込</span></span>
+    </div>
+    <button class="checkout-btn" onclick="alert('ご注文ありがとうございます！\n決済ページへ進みます。')">レジに進む</button>
+  </div>
+</div>
+</body>
+</html>
